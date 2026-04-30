@@ -41,4 +41,4 @@ The debut t-shirt features a hand-drawn tree whose roots form the subtle shape o
 
 ## Live Site
 
-View the full design breakdown at: https://ethan1243.github.io/selah-threads/
+View the full design breakdown at: https://ethan1243.github.io/vesper-threads/
