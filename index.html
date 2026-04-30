@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selah Threads — "Rooted" Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --warm-sand: #D4B896;
+            --burnt-clay: #B56A4C;
+            --olive-branch: #6B7C4E;
+            --deep-navy: #2C3E5A;
+            --soft-cream: #F5F0E8;
+            --dark-text: #2A2520;
+            --muted-text: #6B6560;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--soft-cream);
+            color: var(--dark-text);
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(170deg, var(--soft-cream) 0%, #E8E2D4 40%, var(--olive-branch) 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -120px;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(107, 124, 78, 0.1);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(212, 184, 150, 0.1);
+        }
+
+        .hero-brand {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--muted-text);
+            margin-bottom: 1rem;
+        }
+
+        .hero-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(4rem, 10vw, 8rem);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--deep-navy);
+            margin-bottom: 0.25rem;
+            line-height: 1;
+        }
+
+        .hero-tagline {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            color: var(--burnt-clay);
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-verse {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            color: var(--muted-text);
+            letter-spacing: 0.1em;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(245, 240, 232, 0.7);
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            animation: float 2.5s ease-in-out infinite;
+        }
+
+        .scroll-hint span {
+            display: block;
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(245, 240, 232, 0.5), transparent);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        /* ── Sections ── */
+        section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--burnt-clay);
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 600;
+            color: var(--deep-navy);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--deep-navy);
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            font-size: 1rem;
+            color: var(--dark-text);
+        }
+
+        .lead {
+            font-size: 1.15rem;
+            color: var(--muted-text);
+        }
+
+        /* ── Divider ── */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            color: var(--warm-sand);
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--warm-sand);
+        }
+
+        .divider-cross {
+            font-size: 1.2rem;
+        }
+
+        /* ── T-Shirt Showcase ── */
+        .shirt-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+            margin: 3rem 0;
+        }
+
+        .shirt-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .shirt-svg-wrap {
+            width: 100%;
+            max-width: 380px;
+            filter: drop-shadow(0 15px 40px rgba(0,0,0,0.12));
+        }
+
+        .shirt-details {
+            padding-top: 1rem;
+        }
+
+        .detail-block {
+            margin-bottom: 2rem;
+        }
+
+        .detail-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--burnt-clay);
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            font-size: 0.95rem;
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .color-options {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .color-dot {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .color-dot:hover {
+            transform: scale(1.15);
+        }
+
+        .color-dot.active {
+            border-color: var(--deep-navy);
+        }
+
+        .color-dot-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            white-space: nowrap;
+            color: var(--muted-text);
+        }
+
+        /* ── Design Anatomy ── */
+        .anatomy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2.5rem 0;
+        }
+
+        .anatomy-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+            border-top: 3px solid var(--olive-branch);
+        }
+
+        .anatomy-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--olive-branch);
+            opacity: 0.4;
+            margin-bottom: 0.5rem;
+        }
+
+        .anatomy-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--deep-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .anatomy-desc {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+            line-height: 1.6;
+        }
+
+        /* ── Materials Table ── */
+        .materials-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.9rem;
+        }
+
+        .materials-table thead {
+            background: var(--deep-navy);
+            color: var(--soft-cream);
+        }
+
+        .materials-table th {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .materials-table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(212, 184, 150, 0.3);
+            vertical-align: top;
+        }
+
+        .materials-table tbody tr {
+            background: white;
+            transition: background 0.2s ease;
+        }
+
+        .materials-table tbody tr:hover {
+            background: rgba(212, 184, 150, 0.08);
+        }
+
+        .materials-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .material-tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(107, 124, 78, 0.1);
+            color: var(--olive-branch);
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            font-weight: 500;
+        }
+
+        /* ── Cost Breakdown ── */
+        .cost-section {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+            margin: 2.5rem 0;
+        }
+
+        .cost-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .cost-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--warm-sand);
+        }
+
+        .cost-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(212, 184, 150, 0.2);
+            font-size: 0.9rem;
+        }
+
+        .cost-line:last-child {
+            border-bottom: none;
+        }
+
+        .cost-label {
+            color: var(--muted-text);
+        }
+
+        .cost-value {
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+
+        .cost-total {
+            background: var(--deep-navy);
+            color: var(--soft-cream);
+            padding: 1.25rem 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cost-total .cost-label {
+            color: rgba(245, 240, 232, 0.7);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .cost-total .cost-value {
+            color: var(--soft-cream);
+            font-size: 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+        }
+
+        .cost-note {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+            font-style: italic;
+            margin-top: 1rem;
+        }
+
+        /* ── Profit Summary ── */
+        .profit-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+
+        .profit-card {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+        }
+
+        .profit-card.highlight {
+            background: var(--deep-navy);
+            color: var(--soft-cream);
+        }
+
+        .profit-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--olive-branch);
+            margin-bottom: 0.25rem;
+        }
+
+        .profit-card.highlight .profit-number {
+            color: var(--warm-sand);
+        }
+
+        .profit-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--muted-text);
+        }
+
+        .profit-card.highlight .profit-label {
+            color: rgba(245, 240, 232, 0.6);
+        }
+
+        /* ── Volume Tiers ── */
+        .tier-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.9rem;
+        }
+
+        .tier-table thead {
+            background: var(--olive-branch);
+            color: var(--soft-cream);
+        }
+
+        .tier-table th {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .tier-table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(212, 184, 150, 0.3);
+            background: white;
+        }
+
+        .tier-table tbody tr:hover td {
+            background: rgba(107, 124, 78, 0.04);
+        }
+
+        .tier-recommended {
+            display: inline-block;
+            font-size: 0.6rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            background: var(--burnt-clay);
+            color: white;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── Verse Banner ── */
+        .verse-banner {
+            background: var(--deep-navy);
+            color: var(--soft-cream);
+            text-align: center;
+            padding: 5rem 2rem;
+            margin: 0;
+            max-width: 100%;
+        }
+
+        .verse-banner .verse-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            font-style: italic;
+            font-weight: 400;
+            max-width: 700px;
+            margin: 0 auto 1rem;
+            line-height: 1.6;
+            color: var(--soft-cream);
+        }
+
+        .verse-banner .verse-ref {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0.6;
+            color: var(--soft-cream);
+        }
+
+        /* ── Footer ── */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            font-size: 0.8rem;
+            color: var(--muted-text);
+            letter-spacing: 0.1em;
+        }
+
+        footer .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--deep-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 700px) {
+            .shirt-showcase {
+                grid-template-columns: 1fr;
+            }
+
+            .cost-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profit-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .anatomy-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Hero ── -->
+    <header class="hero">
+        <div class="hero-brand">Selah Threads / The Selah Series</div>
+        <h1 class="hero-logo">Rooted</h1>
+        <p class="hero-tagline">Faith that runs deep.</p>
+        <p class="hero-verse">Jeremiah 17:8</p>
+        <div class="scroll-hint">
+            scroll
+            <span></span>
+        </div>
+    </header>
+
+    <!-- ── The Design ── -->
+    <section>
+        <div class="section-label">01 / The Design</div>
+        <h2>A Tree With a Secret</h2>
+        <p class="lead">The "Rooted" tee features a single hand-drawn tree whose roots form the subtle shape of a cross. It's faith hidden in plain sight &mdash; visible to those who look closely, personal to those who wear it.</p>
+
+        <div class="shirt-showcase">
+            <div class="shirt-visual">
+                <div class="shirt-svg-wrap">
+                    <!-- T-Shirt SVG with Rooted Design -->
+                    <svg viewBox="0 0 500 420" xmlns="http://www.w3.org/2000/svg">
+                        <!-- T-Shirt Shape - wider, shorter, realistic proportions -->
+                        <path d="
+                            M 170 8
+                            L 100 22
+                            L 5 95
+                            L 45 140
+                            L 105 100
+                            L 100 395
+                            Q 100 410 115 410
+                            L 385 410
+                            Q 400 410 400 395
+                            L 395 100
+                            L 455 140
+                            L 495 95
+                            L 400 22
+                            L 330 8
+                            Q 310 42 250 42
+                            Q 190 42 170 8
+                            Z
+                        " fill="#6B7C4E" />
+
+                        <!-- Collar -->
+                        <path d="
+                            M 170 8
+                            Q 190 42 250 42
+                            Q 310 42 330 8
+                            Q 310 25 250 28
+                            Q 190 25 170 8
+                            Z
+                        " fill="#5E6F43" />
+
+                        <!-- Sleeve seams -->
+                        <line x1="105" y1="100" x2="170" y2="12" stroke="#5E6F43" stroke-width="1.2" opacity="0.4"/>
+                        <line x1="395" y1="100" x2="330" y2="12" stroke="#5E6F43" stroke-width="1.2" opacity="0.4"/>
+
+                        <!-- Subtle fabric texture lines -->
+                        <line x1="100" y1="395" x2="400" y2="395" stroke="#5E6F43" stroke-width="0.5" opacity="0.2"/>
+                        <line x1="101" y1="390" x2="399" y2="390" stroke="#5E6F43" stroke-width="0.3" opacity="0.15"/>
+
+                        <!-- === TREE DESIGN === -->
+                        <!-- Tree trunk -->
+                        <rect x="244" y="130" width="12" height="110" rx="2" fill="#F5F0E8" opacity="0.85"/>
+
+                        <!-- Branches -->
+                        <!-- Left branches -->
+                        <line x1="250" y1="158" x2="212" y2="130" stroke="#F5F0E8" stroke-width="3.5" stroke-linecap="round" opacity="0.85"/>
+                        <line x1="217" y1="133" x2="202" y2="112" stroke="#F5F0E8" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                        <line x1="217" y1="133" x2="200" y2="137" stroke="#F5F0E8" stroke-width="2" stroke-linecap="round" opacity="0.65"/>
+                        <line x1="250" y1="178" x2="218" y2="162" stroke="#F5F0E8" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+                        <line x1="222" y1="164" x2="208" y2="150" stroke="#F5F0E8" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                        <line x1="250" y1="195" x2="225" y2="188" stroke="#F5F0E8" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+
+                        <!-- Right branches -->
+                        <line x1="250" y1="148" x2="292" y2="122" stroke="#F5F0E8" stroke-width="3.5" stroke-linecap="round" opacity="0.85"/>
+                        <line x1="287" y1="124" x2="305" y2="110" stroke="#F5F0E8" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                        <line x1="287" y1="124" x2="302" y2="130" stroke="#F5F0E8" stroke-width="2" stroke-linecap="round" opacity="0.65"/>
+                        <line x1="250" y1="172" x2="284" y2="156" stroke="#F5F0E8" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+                        <line x1="280" y1="158" x2="296" y2="148" stroke="#F5F0E8" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                        <line x1="250" y1="190" x2="278" y2="184" stroke="#F5F0E8" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+
+                        <!-- Top branch -->
+                        <line x1="250" y1="135" x2="250" y2="105" stroke="#F5F0E8" stroke-width="3.5" stroke-linecap="round" opacity="0.85"/>
+                        <line x1="250" y1="112" x2="238" y2="96" stroke="#F5F0E8" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                        <line x1="250" y1="112" x2="262" y2="96" stroke="#F5F0E8" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+
+                        <!-- Leaf clusters -->
+                        <circle cx="202" cy="108" r="10" fill="#F5F0E8" opacity="0.18"/>
+                        <circle cx="195" cy="134" r="8" fill="#F5F0E8" opacity="0.14"/>
+                        <circle cx="206" cy="147" r="8" fill="#F5F0E8" opacity="0.14"/>
+                        <circle cx="305" cy="106" r="10" fill="#F5F0E8" opacity="0.18"/>
+                        <circle cx="305" cy="128" r="7" fill="#F5F0E8" opacity="0.14"/>
+                        <circle cx="298" cy="145" r="8" fill="#F5F0E8" opacity="0.14"/>
+                        <circle cx="236" cy="90" r="9" fill="#F5F0E8" opacity="0.16"/>
+                        <circle cx="264" cy="90" r="9" fill="#F5F0E8" opacity="0.16"/>
+                        <circle cx="250" cy="82" r="10" fill="#F5F0E8" opacity="0.2"/>
+
+                        <!-- === ROOTS forming a CROSS === -->
+                        <!-- Vertical root (taproot = cross vertical) -->
+                        <line x1="250" y1="240" x2="250" y2="305" stroke="#F5F0E8" stroke-width="3.5" stroke-linecap="round" opacity="0.8"/>
+                        <line x1="250" y1="300" x2="240" y2="318" stroke="#F5F0E8" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+                        <line x1="250" y1="300" x2="260" y2="316" stroke="#F5F0E8" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+
+                        <!-- Horizontal roots (cross arms) -->
+                        <line x1="215" y1="268" x2="285" y2="268" stroke="#F5F0E8" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+
+                        <!-- Left root extensions -->
+                        <line x1="218" y1="268" x2="200" y2="280" stroke="#F5F0E8" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+                        <line x1="218" y1="268" x2="204" y2="258" stroke="#F5F0E8" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+
+                        <!-- Right root extensions -->
+                        <line x1="282" y1="268" x2="300" y2="280" stroke="#F5F0E8" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+                        <line x1="282" y1="268" x2="296" y2="258" stroke="#F5F0E8" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+
+                        <!-- Additional organic roots -->
+                        <line x1="246" y1="242" x2="224" y2="264" stroke="#F5F0E8" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+                        <line x1="254" y1="242" x2="276" y2="264" stroke="#F5F0E8" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+                        <line x1="244" y1="245" x2="228" y2="288" stroke="#F5F0E8" stroke-width="1.8" stroke-linecap="round" opacity="0.4"/>
+                        <line x1="256" y1="245" x2="272" y2="288" stroke="#F5F0E8" stroke-width="1.8" stroke-linecap="round" opacity="0.4"/>
+
+                        <!-- Scripture ref along trunk -->
+                        <text x="262" y="225" font-family="Inter, sans-serif" font-size="7" fill="#F5F0E8" opacity="0.5" letter-spacing="0.5">Jer. 17:8</text>
+
+                        <!-- Selah Threads small branding at hem -->
+                        <text x="250" y="375" font-family="Cormorant Garamond, serif" font-size="10" fill="#F5F0E8" opacity="0.25" text-anchor="middle" letter-spacing="3.5">SELAH THREADS</text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="shirt-details">
+                <div class="detail-block">
+                    <div class="detail-label">Design</div>
+                    <div class="detail-value">Hand-drawn tree with roots forming a hidden cross. Scripture reference <em>"Jer. 17:8"</em> in small text along the trunk.</div>
+                </div>
+
+                <div class="detail-block">
+                    <div class="detail-label">Print Method</div>
+                    <div class="detail-value">Screen print, single color (cream on pigment-dyed fabric) for a vintage, embedded feel.</div>
+                </div>
+
+                <div class="detail-block">
+                    <div class="detail-label">Available Colors</div>
+                    <div class="color-options">
+                        <div class="color-dot active" style="background: #6B7C4E;">
+                            <span class="color-dot-label">Olive Branch</span>
+                        </div>
+                        <div class="color-dot" style="background: #D4B896;">
+                            <span class="color-dot-label">Warm Sand</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-block" style="margin-top: 2.5rem;">
+                    <div class="detail-label">Sizes</div>
+                    <div class="detail-value">S &mdash; 3XL (Unisex relaxed fit)</div>
+                </div>
+
+                <div class="detail-block">
+                    <div class="detail-label">Retail Price</div>
+                    <div class="detail-value" style="font-size: 1.3rem; font-weight: 500;">$34.00</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"><span class="divider-cross">+</span></div>
+
+    <!-- ── Design Anatomy ── -->
+    <section>
+        <div class="section-label">02 / Design Anatomy</div>
+        <h2>Why Every Detail Matters</h2>
+        <p class="lead">Nothing on this shirt is accidental. Each element serves both an aesthetic and a spiritual purpose.</p>
+
+        <div class="anatomy-grid">
+            <div class="anatomy-card">
+                <div class="anatomy-number">01</div>
+                <div class="anatomy-title">The Tree</div>
+                <div class="anatomy-desc">Hand-drawn with organic, imperfect lines. Not clipart, not AI-generated. The slightly rough strokes give it warmth and humanity &mdash; this is a tree that was <em>planted</em>, not manufactured.</div>
+            </div>
+            <div class="anatomy-card">
+                <div class="anatomy-number">02</div>
+                <div class="anatomy-title">The Hidden Cross</div>
+                <div class="anatomy-desc">The root system forms a cross shape that becomes visible only when you look for it. The wearer knows it's there. It's a personal anchor &mdash; faith that runs beneath the surface.</div>
+            </div>
+            <div class="anatomy-card">
+                <div class="anatomy-number">03</div>
+                <div class="anatomy-title">The Scripture</div>
+                <div class="anatomy-desc"><em>"Jer. 17:8"</em> runs in tiny text along the trunk &mdash; not across the chest. It's a reference, not a billboard. Those who notice will look it up. Those who don't will still see a beautiful design.</div>
+            </div>
+            <div class="anatomy-card">
+                <div class="anatomy-number">04</div>
+                <div class="anatomy-title">Single-Color Print</div>
+                <div class="anatomy-desc">Cream ink on pigment-dyed cotton creates a worn, tonal look from day one. The design feels like it's part of the shirt, not sitting on top of it. This also keeps production costs down.</div>
+            </div>
+            <div class="anatomy-card">
+                <div class="anatomy-number">05</div>
+                <div class="anatomy-title">Olive Branch Color</div>
+                <div class="anatomy-desc">The primary colorway uses Olive Branch green &mdash; symbolizing peace and renewal. It also stands out in a market saturated with black and white Christian tees.</div>
+            </div>
+            <div class="anatomy-card">
+                <div class="anatomy-number">06</div>
+                <div class="anatomy-title">Relaxed Fit</div>
+                <div class="anatomy-desc">A slightly oversized, relaxed silhouette that aligns with the 2026 streetwear trend. Comfortable enough to sleep in, sharp enough to wear out. Faith should feel easy to carry.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Verse Banner ── -->
+    <div class="verse-banner">
+        <p class="verse-text">"Blessed is the one who trusts in the Lord&hellip; They will be like a tree planted by the water that sends out its roots by the stream. It does not fear when heat comes; its leaves are always green."</p>
+        <p class="verse-ref">Jeremiah 17:7&ndash;8</p>
+    </div>
+
+    <!-- ── Materials ── -->
+    <section>
+        <div class="section-label">03 / Materials</div>
+        <h2>What It's Made Of</h2>
+        <p class="lead">Every material was chosen for a reason. Here's the full bill of materials for one "Rooted" t-shirt.</p>
+
+        <table class="materials-table">
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Specification</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Blank T-Shirt</strong> <span class="material-tag">Core</span></td>
+                    <td>100% combed ring-spun cotton, 240 GSM heavyweight, pigment-dyed</td>
+                    <td>Thick, soft, vintage feel. Holds shape after washing. Pigment dye gives each shirt a unique lived-in look.</td>
+                </tr>
+                <tr>
+                    <td><strong>Screen Print Ink</strong> <span class="material-tag">Design</span></td>
+                    <td>Water-based discharge ink, cream/off-white</td>
+                    <td>Bonds with the fabric instead of sitting on top. Softer hand-feel than plastisol. Better for the vintage aesthetic.</td>
+                </tr>
+                <tr>
+                    <td><strong>Screen</strong></td>
+                    <td>230 mesh count aluminum frame</td>
+                    <td>High mesh count captures the fine detail in the branches and root work. One-time cost amortized across the run.</td>
+                </tr>
+                <tr>
+                    <td><strong>Neck Label</strong> <span class="material-tag">Branding</span></td>
+                    <td>Woven damask label, tagless heat transfer option</td>
+                    <td>Custom "Selah Threads" branding. Tagless option for maximum comfort &mdash; no scratchy tag.</td>
+                </tr>
+                <tr>
+                    <td><strong>Hang Tag</strong></td>
+                    <td>Recycled kraft cardstock, 350 GSM, cotton twine</td>
+                    <td>Carries the verse (Jeremiah 17:8) and brand story. Kraft material aligns with earth-tone aesthetic.</td>
+                </tr>
+                <tr>
+                    <td><strong>Packaging</strong></td>
+                    <td>Recycled kraft mailer or compostable poly bag</td>
+                    <td>Eco-friendly packaging that reinforces brand values. Protects product during shipping.</td>
+                </tr>
+                <tr>
+                    <td><strong>Thread</strong></td>
+                    <td>Tonal cotton thread, matched to garment color</td>
+                    <td>Clean, professional finish with no visible contrast stitching.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div class="divider"><span class="divider-cross">+</span></div>
+
+    <!-- ── Cost Breakdown ── -->
+    <section>
+        <div class="section-label">04 / Cost Estimate</div>
+        <h2>What It Costs to Make</h2>
+        <p class="lead">A transparent breakdown of per-unit production costs at a 100-unit first run, plus your margin at a $34 retail price.</p>
+
+        <div class="cost-section">
+            <div class="cost-grid">
+                <div class="cost-column">
+                    <h3>Per-Unit Costs</h3>
+                    <div class="cost-line">
+                        <span class="cost-label">Blank tee (240 GSM, pigment-dyed)</span>
+                        <span class="cost-value">$7.50</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Screen printing (1 color, front)</span>
+                        <span class="cost-value">$3.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Woven neck label</span>
+                        <span class="cost-value">$0.50</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Hang tag + twine</span>
+                        <span class="cost-value">$0.40</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Packaging (kraft mailer)</span>
+                        <span class="cost-value">$0.60</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Quality check + folding</span>
+                        <span class="cost-value">$0.50</span>
+                    </div>
+
+                    <div class="cost-total">
+                        <span class="cost-label">Cost per unit</span>
+                        <span class="cost-value">$12.50</span>
+                    </div>
+                    <p class="cost-note">Based on a 100-unit first run. Costs drop significantly at higher volumes.</p>
+                </div>
+
+                <div class="cost-column">
+                    <h3>One-Time Setup Costs</h3>
+                    <div class="cost-line">
+                        <span class="cost-label">Screen creation (1 color)</span>
+                        <span class="cost-value">$35.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Artwork prep / film output</span>
+                        <span class="cost-value">$25.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Label design + die cut</span>
+                        <span class="cost-value">$40.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Hang tag design + print plate</span>
+                        <span class="cost-value">$30.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Color sample / proof</span>
+                        <span class="cost-value">$20.00</span>
+                    </div>
+
+                    <div class="cost-total" style="background: var(--olive-branch);">
+                        <span class="cost-label">Total setup</span>
+                        <span class="cost-value">$150.00</span>
+                    </div>
+                    <p class="cost-note">Setup costs are one-time. They don't repeat on reorders.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profit Summary -->
+        <h3 style="margin-top: 3rem;">Your Numbers at 100 Units</h3>
+        <div class="profit-cards">
+            <div class="profit-card">
+                <div class="profit-number">$1,400</div>
+                <div class="profit-label">Total production cost</div>
+            </div>
+            <div class="profit-card highlight">
+                <div class="profit-number">$21.50</div>
+                <div class="profit-label">Profit per shirt</div>
+            </div>
+            <div class="profit-card">
+                <div class="profit-number">$2,150</div>
+                <div class="profit-label">Total profit (if sold out)</div>
+            </div>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--muted-text); text-align: center;"><em>Total investment: ~$1,400 production + $150 setup = <strong>$1,550</strong>. Total revenue at sellout: <strong>$3,400</strong>. Margin: <strong>63%</strong>.</em></p>
+
+        <!-- Volume Tiers -->
+        <h3 style="margin-top: 3rem;">How Volume Affects Your Cost</h3>
+        <p>Ordering more units drops your per-unit cost significantly, because setup costs are amortized and printers offer volume discounts.</p>
+
+        <table class="tier-table">
+            <thead>
+                <tr>
+                    <th>Order Size</th>
+                    <th>Cost / Unit</th>
+                    <th>Total Investment</th>
+                    <th>Profit / Unit @ $34</th>
+                    <th>Margin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>50 units</strong></td>
+                    <td>$14.00</td>
+                    <td>$850</td>
+                    <td>$20.00</td>
+                    <td>59%</td>
+                </tr>
+                <tr>
+                    <td><strong>100 units</strong> <span class="tier-recommended">Recommended</span></td>
+                    <td>$12.50</td>
+                    <td>$1,400</td>
+                    <td>$21.50</td>
+                    <td>63%</td>
+                </tr>
+                <tr>
+                    <td><strong>250 units</strong></td>
+                    <td>$10.00</td>
+                    <td>$2,650</td>
+                    <td>$24.00</td>
+                    <td>71%</td>
+                </tr>
+                <tr>
+                    <td><strong>500 units</strong></td>
+                    <td>$8.50</td>
+                    <td>$4,400</td>
+                    <td>$25.50</td>
+                    <td>75%</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="cost-note">Estimates based on 2026 U.S. screen printing averages. Actual costs vary by supplier and location. Does not include shipping to customers, platform fees, or taxes.</p>
+    </section>
+
+    <div class="divider"><span class="divider-cross">+</span></div>
+
+    <!-- ── Why Rooted ── -->
+    <section>
+        <div class="section-label">05 / Why This Design</div>
+        <h2>Why "Rooted" First?</h2>
+
+        <p>Of all five designs in the Selah Series, "Rooted" is the strongest lead product for three reasons:</p>
+
+        <p><strong>It's universally wearable.</strong> The tree design appeals to anyone &mdash; it reads as nature art to some, faith statement to others. It doesn't alienate. It invites.</p>
+
+        <p><strong>It's production-efficient.</strong> Single-color screen print on one side keeps costs low and quality high. No complex registration, no multi-pass printing. Clean and repeatable.</p>
+
+        <p><strong>It tells a layered story.</strong> Surface level: beautiful tree. Second look: the roots are a cross. Third look: there's a verse reference. Each layer rewards attention &mdash; exactly the kind of depth that builds word-of-mouth.</p>
+    </section>
+
+    <!-- ── Closing Verse ── -->
+    <div class="verse-banner">
+        <p class="verse-text">"He will be like a tree firmly planted by streams of water, which yields its fruit in its season, and its leaf does not wither; and in whatever he does, he prospers."</p>
+        <p class="verse-ref">Psalm 1:3</p>
+    </div>
+
+    <!-- ── Footer ── -->
+    <footer>
+        <div class="footer-logo">SELAH THREADS</div>
+        <p>Pause. Wear the Word.</p>
+    </footer>
+
+</body>
+</html>
