@@ -1,8 +1,8 @@
-# Selah Threads
+# Vesper Threads
 
-**Pause. Wear the Word.**
+**Worn in faith. Rooted in purpose.**
 
-Selah Threads is a faith-based clothing brand rooted in comfort, warmth, and faith. The name comes from the Hebrew word *selah*, found 71 times throughout the Psalms — a musical direction meaning to pause, reflect, and rest in God's presence.
+Vesper Threads is a faith-based clothing brand rooted in comfort, warmth, and faith. The name comes from the Latin word *vesper*, meaning evening prayer — a quiet, reflective moment of devotion at the close of day.
 
 ## The "Rooted" Design
 
@@ -35,7 +35,7 @@ The debut t-shirt features a hand-drawn tree whose roots form the subtle shape o
 |------|------|
 | Per-unit production | $12.50 |
 | One-time setup | $150.00 |
-| **Total investment** | **$1,400** |
+| **Total investment** | **$1,550** |
 | Profit per shirt @ $34 | $21.50 |
 | **Margin** | **63%** |
 
